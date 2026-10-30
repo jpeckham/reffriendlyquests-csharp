@@ -1,66 +1,34 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>RefFriendlyQuests</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
-    <Version>2.1.0</Version>
-    <!-- The two lines below will set the output path for the binaries -->
-    <OutputPath>bin\$(Configuration)\$(ProjectName)\$(AssemblyName)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>2.1.1</Version>
+    <DebugType>None</DebugType>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
+    <SPTPath Condition="'$(SPTPath)' == ''">C:\sptarkov\SPTarkov 5.0.0-BE-1.3.0.0.48484</SPTPath>
+    <ModOutputDir>$(MSBuildProjectDirectory)/Build/SPT_Runtime/user/mods/acidphantasm-reffriendlyquests</ModOutputDir>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="SPTarkov.Common" Version="4.1.0" />
-    <PackageReference Include="SPTarkov.DI" Version="4.1.0" />
-    <PackageReference Include="SPTarkov.Server.Core" Version="4.1.0" />
-    <PackageReference Include="SPTarkov.Server.Web" Version="4.1.0" />
+    <Reference Include="SPTarkov.Common;SPTarkov.DI;SPTarkov.Server.Core;SPTarkov.Server.Web;SemanticVersioning">
+      <HintPath>$(SPTPath)/SPT_Runtime/%(Identity).dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Compile Remove="tests/**/*.cs" />
+    <Content Remove="tests/**;Build/**;bin/**;obj/**" />
   </ItemGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DebugType>None</DebugType>
-        <DebugSymbols>false</DebugSymbols>
-        <GenerateDependencyFile>false</GenerateDependencyFile>
-        <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
-    </PropertyGroup>
-    <PropertyGroup>
-        <TarkovDir Condition=" '$(TarkovDir)' == '' ">D:\SPT 4.1 BE\</TarkovDir>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-    </PropertyGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <PropertyGroup>
-            <ModOutputDir>$(TarkovDir)SPT_Runtime\user\mods\$(ProjectName)\</ModOutputDir>
-            <ReleaseOutputDir>$(ProjectDir)release\$(ProjectName)\SPT_Runtime\user\mods\$(ProjectName)\</ReleaseOutputDir>
-            <ZipFile>$(ProjectDir)release\$(ProjectName).7z</ZipFile>
-            <SevenZipExe>"C:\Program Files\7-Zip\7z.exe"</SevenZipExe>
-        </PropertyGroup>
-
-        <ItemGroup>
-            <ServerComponents Include="$(ProjectDir)bin\Release\$(ProjectName)\*.*" />
-            <Data Include="$(ProjectDir)db\*.*" />
-            <License Include="$(ProjectDir)LICENSE" />
-        </ItemGroup>
-
-        <Copy SourceFiles="@(ServerComponents)" DestinationFolder="$(ModOutputDir)%(RecursiveDir)" />
-        <Copy SourceFiles="@(License)" DestinationFolder="$(ModOutputDir)%(RecursiveDir)" />
-        <Copy SourceFiles="@(Data)" DestinationFolder="$(ModOutputDir)db\%(RecursiveDir)" />
-
-        <MakeDir Directories="$(ProjectDir)release" Condition="!Exists('$(ProjectDir)release')" />
-        <MakeDir Directories="$(ReleaseOutputDir)" Condition="!Exists('$(ReleaseOutputDir)')" />
-
-        <Copy SourceFiles="@(ServerComponents)" DestinationFolder="$(ReleaseOutputDir)%(RecursiveDir)" />
-        <Copy SourceFiles="@(License)" DestinationFolder="$(ReleaseOutputDir)%(RecursiveDir)" />
-        <Copy SourceFiles="@(Data)" DestinationFolder="$(ReleaseOutputDir)db\%(RecursiveDir)" />
-
-        <Delete Files="$(ZipFile)" Condition="Exists('$(ZipFile)')" />
-
-        <Exec Command='$(SevenZipExe) a -t7z "$(ZipFile)" "$(ProjectDir)release\$(ProjectName)\*" -mx=5 -m0=lzma2' />
-    </Target>
-    
+  <Target Name="ValidateReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(SPTPath)/SPT_Runtime/SPTarkov.Server.Core.dll')" Text="Set SPTPath to the matching SPT 5.0 game installation." />
+  </Target>
+  <Target Name="StageMod" AfterTargets="Build">
+    <ItemGroup>
+      <ModFiles Include="$(TargetPath);$(MSBuildProjectDirectory)/LICENSE;$(MSBuildProjectDirectory)/config.json;$(MSBuildProjectDirectory)/README.md" />
+      <ModData Include="$(MSBuildProjectDirectory)/db/**/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ModFiles)" DestinationFolder="$(ModOutputDir)" />
+    <Copy SourceFiles="@(ModData)" DestinationFolder="$(ModOutputDir)/db/%(RecursiveDir)" />
+  </Target>
 </Project>

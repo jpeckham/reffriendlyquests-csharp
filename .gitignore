@@ -16,3 +16,6 @@
 /obj/Debug
 /bin/
 /release/
+/Build/
+**/bin/
+**/obj/

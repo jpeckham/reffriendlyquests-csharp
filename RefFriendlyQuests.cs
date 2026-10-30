@@ -143,10 +143,10 @@ public class RefFriendlyQuests(
         var refBase = tradersTable.GetTrader(Traders.REF)?.Base;
         foreach (var loyaltyLevel in refBase?.LoyaltyLevels ?? [])
         {
-            if (loyaltyLevel.MinStanding is null or 0)
+            if (loyaltyLevel.MinStanding == 0)
                 continue;
 
-            loyaltyLevel.MinStanding = Math.Round(loyaltyLevel.MinStanding.Value * config.LoyaltyLevelMultiplier, 2);
+            loyaltyLevel.MinStanding = Math.Round(loyaltyLevel.MinStanding * config.LoyaltyLevelMultiplier, 2);
         }
     }
     

@@ -1,5 +1,7 @@
-﻿{
+{
   "68341eb25619c8e2a9031501": {
+    "AvailableForStart": [],
+    "Fail": [],
     "AvailableForFinish": [
       {
         "completeInSeconds": 0,
@@ -49,6 +51,8 @@
     ]
   },
   "68341f6fe2e7ef70a3060a0a": {
+    "AvailableForStart": [],
+    "Fail": [],
     "AvailableForFinish": [
       {
         "completeInSeconds": 0,
@@ -98,6 +102,8 @@
     ]
   },
   "6834202a186efa3c5b07f9a2": {
+    "AvailableForStart": [],
+    "Fail": [],
     "AvailableForFinish": [
       {
         "completeInSeconds": 0,
@@ -147,6 +153,8 @@
     ]
   },
   "683421515619c8e2a9031511": {
+    "AvailableForStart": [],
+    "Fail": [],
     "AvailableForFinish": [
       {
         "completeInSeconds": 0,
@@ -196,6 +204,8 @@
     ]
   },
   "68342265a8d674b5740b31f0": {
+    "AvailableForStart": [],
+    "Fail": [],
     "AvailableForFinish": [
       {
         "completeInSeconds": 0,
@@ -245,6 +255,8 @@
     ]
   },
   "68342446a8d674b5740b31fc": {
+    "AvailableForStart": [],
+    "Fail": [],
     "AvailableForFinish": [
       {
         "completeInSeconds": 0,
